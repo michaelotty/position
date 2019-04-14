@@ -27,7 +27,6 @@
 
 // Function Declarations
 static emxArray_real_T *captureWaveform(void);
-//static double argInit_real_T(void);
 static void main_getPosition(void);
 int getSample();
 
@@ -36,87 +35,65 @@ static emxArray_real_T *captureWaveform(void)
 {
   emxArray_real_T *result;
   static int size[1] = { 8000*4 };
+	int loops = size[0]/4;
 
-  // Set the size of the array.
-  // Change this size to the value that the application requires.
   result = emxCreateND_real_T(1, size);
 
-  // Loop over the array to initialize each element.
-  /*for (idx0 = 0; idx0 < result->size[0U]; idx0++) {
-    // Set the value of the array element.
-    // Change this value to the value that the application requires.
-    result->data[idx0] = argInit_real_T();
-  }*/ 
-	int loops = 8000;
-//	double data[4*loops];
-
 	for(int i = 0; i < loops; i++) {
-		digitalWrite(CONV, LOW);
-		digitalWrite(CONV, HIGH);
+    digitalWrite(CONV, LOW);
+    digitalWrite(CONV, HIGH);
 
-		while(digitalRead(BUSY)){
-			printf("loop\n");
-		}// Wait until BUSY is 0
+    while(digitalRead(BUSY)){
+      printf("loop\n");
+    }// Wait until BUSY is 0
 
-		digitalWrite(RD, LOW);
-		digitalWrite(CS_A, LOW);
+    digitalWrite(RD, LOW);
+    digitalWrite(CS_A, LOW);
 
-		result->data[4*i] = getSample();
+    result->data[4*i] = getSample();
 
-		digitalWrite(CS_A, HIGH);
+    digitalWrite(CS_A, HIGH);
 
-		digitalWrite(CS_B, LOW);
+    digitalWrite(CS_B, LOW);
 
-		result->data[4*i+1] = getSample();
+    result->data[4*i+1] = getSample();
 
-		digitalWrite(RD, HIGH);
-		digitalWrite(CS_B, HIGH);
+    digitalWrite(RD, HIGH);
+    digitalWrite(CS_B, HIGH);
 
-		digitalWrite(RD, LOW);
-		digitalWrite(CS_A, LOW);
+    digitalWrite(RD, LOW);
+    digitalWrite(CS_A, LOW);
 
-		result->data[4*i+2] = getSample();
+    result->data[4*i+2] = getSample();
 
-		digitalWrite(CS_A, HIGH);
+    digitalWrite(CS_A, HIGH);
 
-		digitalWrite(CS_B, LOW);
+    digitalWrite(CS_B, LOW);
 
-		result->data[4*i+3] = getSample();
+    result->data[4*i+3] = getSample();
 
-		digitalWrite(CS_B, HIGH);
-		digitalWrite(RD, HIGH);
-		//printf("\n"); 
-	}
+    digitalWrite(CS_B, HIGH);
+    digitalWrite(RD, HIGH);
+  }
 
   return result;
 }
 
-/*
-static double argInit_real_T(void)
-{
-  return 0.0;
-}
-*/
-
-static void main_getPosition(void)
-{
-  emxArray_real_T *zippedSigs;
+static void main_getPosition(void) {
+  emxArray_real_T *waveform;
   double x;
   double y;
 
-  // Initialize function 'getPosition' input arguments.
-  // Initialize function input argument 'zippedSigs'.
-  zippedSigs = captureWaveform();
+  waveform = captureWaveform();
 
-  // Call the entry-point 'getPosition'.
-  getPosition(zippedSigs, &x, &y);
-  emxDestroyArray_real_T(zippedSigs);
+  // Calculate the position from the waveform
+  getPosition(waveform, &x, &y);
+  emxDestroyArray_real_T(waveform);
 
   printf("%f %f\n", x, y);
 }
 
-int main(int argc, const char * const argv[])
-{
+int main(int argc, const char * const argv[]) {
 	(void)argc;
 	(void)argv;
 
@@ -147,16 +124,10 @@ int main(int argc, const char * const argv[])
 
 
 	clock_t start, end;
-  	double cpu_time;
+  double cpu_time;
 
-  	start = clock();
+  start = clock();
 
-	/*FILE *f;
-        f = fopen("output.txt", "w");
-	fclose(f);*/
-
-	// Invoke the entry-point functions.
-	// You can call entry-point functions multiple times.
 	main_getPosition();
 
 	end = clock();
@@ -165,7 +136,6 @@ int main(int argc, const char * const argv[])
 	printf("time: %f\n", cpu_time);
 
 	// Terminate the application.
-	// You do not need to do this more than one time.
 	getPosition_terminate();
 	return 0;
 }
@@ -200,14 +170,6 @@ int getSample() {
 	int sample = 0x000 | a | b | c | d | e | f | g | h | i | j | k | l;
 
 	sample = (sample >> 11) == 0 ? sample : (-1 ^ 0xFFF) | sample;
-  	/*if (a) {
-		printf("negated\t");
-    		sample = sample ^ 0x7FF;
-		sample++;
-	}*/
-
-  	//printf("%d\t", sample);
-	//  printf("%d %d %d %d %d %d %d %d %d %d %d %d\n", a, b, c, d, e, f, g, h, i, j, k, l); 
 
 	return sample;
 }

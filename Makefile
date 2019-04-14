@@ -1,5 +1,5 @@
-gpio: main.o libgetPosition.a
-	gcc -Wall -O3 main.o -lm -lwiringPi -L. -lgetPosition -o gpio
+position: main.o libgetPosition.a
+	gcc -Wall -O3 main.o -lm -lwiringPi -L. -lgetPosition -o position
 
 main.o: main.c
 	gcc -Wall -O3 -o main.o -c main.c
@@ -9,4 +9,4 @@ libgetPosition.a:
 .PHONY: clean
 
 clean:
-	rm -f *.o *.a gpio
+	rm -f *.o *.a position
