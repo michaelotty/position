@@ -1,0 +1,12 @@
+getPosition_emxutil.c.o: getPosition_emxutil.c rt_nonfinite.h rtwtypes.h \
+ getPosition.h getPosition_types.h getPosition_emxutil.h
+
+rt_nonfinite.h:
+
+rtwtypes.h:
+
+getPosition.h:
+
+getPosition_types.h:
+
+getPosition_emxutil.h:

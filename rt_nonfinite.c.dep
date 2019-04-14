@@ -1,0 +1,5 @@
+rt_nonfinite.c.o: rt_nonfinite.c rt_nonfinite.h rtwtypes.h
+
+rt_nonfinite.h:
+
+rtwtypes.h:

@@ -1,0 +1,15 @@
+getPosition_emxAPI.c.o: getPosition_emxAPI.c rt_nonfinite.h rtwtypes.h \
+ getPosition.h getPosition_types.h getPosition_emxAPI.h \
+ getPosition_emxutil.h
+
+rt_nonfinite.h:
+
+rtwtypes.h:
+
+getPosition.h:
+
+getPosition_types.h:
+
+getPosition_emxAPI.h:
+
+getPosition_emxutil.h:
