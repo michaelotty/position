@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <wiringPi.h>
+#include <signal.h>
 
 #include "rt_nonfinite.h"
 #include "getPosition.h"
@@ -29,12 +30,13 @@
 static emxArray_real_T *captureWaveform(void);
 static void main_getPosition(void);
 int getSample();
+void cleanup(int number);
 
 // Function Definitions
 static emxArray_real_T *captureWaveform(void)
 {
   emxArray_real_T *result;
-  static int size[1] = { 8000*4 };
+  static int size[1] = {8000*4};
 	int loops = size[0]/4;
 
   result = emxCreateND_real_T(1, size);
@@ -97,6 +99,8 @@ int main(int argc, const char * const argv[]) {
 	(void)argc;
 	(void)argv;
 
+  signal(SIGINT, cleanup);
+
 	getPosition_initialize();
 	wiringPiSetup();
 
@@ -122,24 +126,12 @@ int main(int argc, const char * const argv[]) {
 	digitalWrite(CS_B, HIGH);
 	digitalWrite(RD, HIGH);
 
+  while (1) {
+    main_getPosition();
+  }
 
-	clock_t start, end;
-  double cpu_time;
-
-  start = clock();
-
-	main_getPosition();
-
-	end = clock();
-	cpu_time = ((double) (end - start)) / CLOCKS_PER_SEC;
-
-	printf("time: %f\n", cpu_time);
-
-	// Terminate the application.
-	getPosition_terminate();
 	return 0;
 }
-
 
 int getSample() {
 	int a, b, c, d, e, f, g, h, i, j, k, l;
@@ -172,5 +164,10 @@ int getSample() {
 	sample = (sample >> 11) == 0 ? sample : (-1 ^ 0xFFF) | sample;
 
 	return sample;
+}
+
+void cleanup(int number) {
+	getPosition_terminate();
+  exit(0);
 }
 
