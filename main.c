@@ -46,7 +46,7 @@ static emxArray_real_T *captureWaveform(void)
     digitalWrite(CONV, HIGH);
 
     while(digitalRead(BUSY)){
-      printf("loop\n");
+      //printf("loop\n");
     }// Wait until BUSY is 0
 
     digitalWrite(RD, LOW);
